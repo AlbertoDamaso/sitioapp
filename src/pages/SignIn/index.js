@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Platform, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
+import { AuthContext } from '../../contexts/auth';
 import { Background, Container, Logo, AreaInput, Input,
    SubmitButton, SubmitText, Link, LinkText } from './styles';
 
@@ -10,9 +10,11 @@ export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
+  const { signIn } = useContext(AuthContext);
+  
 
   function handleLogin(){
-    signIn(email, password);
+     signIn(email, password);
   }
 
  return (
@@ -28,6 +30,8 @@ export default function SignIn() {
           placeholder="Email"
           autoCorrect={false}
           autoCapitalize="none"
+          value={email}
+          onChangeText={ (text) => setEmail(text) }          
         />
       </AreaInput>
 
@@ -36,7 +40,9 @@ export default function SignIn() {
           placeholder="Senha"
           autoCorrect={false}
           autoCapitalize="none"
-          secureTextEntry={true}
+          value={password}
+          onChangeText={ (text) => setPassword(text) }
+          secureTextEntry={true}          
         />        
       </AreaInput>
 
