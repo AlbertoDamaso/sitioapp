@@ -10,7 +10,7 @@ export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
-  const { signIn } = useContext(AuthContext);
+  const { signIn, loadingAuth } = useContext(AuthContext);
   
 
   function handleLogin(){
@@ -47,7 +47,13 @@ export default function SignIn() {
       </AreaInput>
 
       <SubmitButton onPress={handleLogin}>            
-        <SubmitText>Entrar</SubmitText>                 
+      {
+          loadingAuth ? (
+            <ActivityIndicator size={20} color="#000"/>
+          ) : (
+            <SubmitText>Entrar</SubmitText>
+          )
+        }               
       </SubmitButton>
 
       <Link onPress={ () => navigation.navigate('SignUp')}>

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Text, Platform, TouchableOpacity} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
 import { Container, Header } from './styles';
 
 export default function DatePicker({ date, onClose, onChange }) {

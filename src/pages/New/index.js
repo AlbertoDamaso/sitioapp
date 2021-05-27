@@ -1,23 +1,92 @@
-import React, { useState } from 'react';
-import { SafeAreaView, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
-import { Background, Input, SubmitButton, SubmitText } from './styles';
+import React, { useState, useContext } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView, Keyboard, TouchableWithoutFeedback, TouchableOpacity, Alert } from 'react-native';
+import { Background, Input, SubmitButton, SubmitText, InputData, Area } from './styles';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { format } from 'date-fns';
+import firebase from '../../services/firebaseConnection';
+import { AuthContext } from '../../contexts/auth';
 import Header from '../../components/Header';
 import Picker from '../../components/Picker';
+import DatePicker from '../../components/DatePicker';
+
 
 export default function New() {
+  const navigation = useNavigation();
+  const { user: usuario } = useContext(AuthContext);
+
   const [brinco, setBrinco] = useState('');
-  const [dataNasc, setDataNasc] = useState('');
+  const [dataNasc, setDataNasc] = useState(new Date());
   const [sexo, setSexo] = useState('');
   const [dono, setDono] = useState('');
   const [peso, setPeso] = useState('');
   const [raca, setRaca] = useState('');
   const [desc, setDesc] = useState('');
   const [catego, setCatego] = useState('');
+  
   const [show, setShow] = useState(false);
 
   function handleShowPicker(){
     setShow(true);
   }
+
+  function handleClose(){
+    setShow(false);
+  }
+
+  const onChange = (date) => {
+    setShow(Platform.OS === 'ios');
+    setDataNasc(date);
+    console.log(date);
+  } 
+
+  function handelSubmit(){
+    Keyboard.dismiss();
+    if(brinco === '' || dataNasc === '' || sexo === '' || dono === ''){
+      alert('Peencha os campos necessários!')
+      return
+    }
+    Alert.alert(
+      'Confirmando dados',
+      `Brinco: ${brinco} - DataN: ${dataNasc} - Sexo: ${sexo} - Dono: ${dono}`,
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel'
+        },
+        {
+          text:'Continuar',
+          onPress:() => handleAdd()
+        }
+      ]
+    )
+  }
+
+  async function handleAdd(){
+    let uid = usuario.uid;
+    let key = await firebase.database().ref('bovinos').child(uid).push().key;
+    await firebase.database().ref('bovinos').child(uid).child(key).set({
+      brinco: brinco,
+      dataNasc: format((dataNasc), 'dd/MM/yyyy'),
+      sexo: sexo,
+      dono: dono,
+      peso: parseFloat(peso),
+      raca: raca,
+      desc: desc,
+      catego: catego
+    })
+    Keyboard.dismiss();
+    setBrinco('');
+    setDataNasc('');
+    setSexo('');
+    setDono('');
+    setPeso('');
+    setRaca('');
+    setDesc('');
+    setCatego('');
+    navigation.navigate('Home');
+  }
+
  return (
    <TouchableWithoutFeedback onPress= { () => Keyboard.dismiss() }>
     <Background>
@@ -32,9 +101,26 @@ export default function New() {
             onChangeText={ (text) => setBrinco(text)}
           />
 
-          <Input
-            placeholder="Data de Nascimento"
-          />
+          <Area>
+            <InputData
+              placeholder="Data de Nascimento"
+              returnKeyTupe="next"
+              onSubmitEditing={ () => Keyboard.dismiss() } 
+              keyboardType="numeric"
+            />   
+            <TouchableOpacity onPress={handleShowPicker}>
+              <Icon name="event" color="#000" size={45} 
+                style={{
+                  backgroundColor:'rgba(0,0,0,0.20)',
+                  width: 60,
+                  height: 50,
+                  marginTop: 11,
+                  paddingTop: 3,
+                  paddingLeft: 8                
+                  }} 
+                />
+            </TouchableOpacity>  
+          </Area>
 
           <Picker onChange={setSexo}/>  
 
@@ -73,11 +159,23 @@ export default function New() {
 
           <Input
             placeholder="Categoria"
+            returnKeyTupe="next"
+            onSubmitEditing={ () => Keyboard.dismiss() }
+            value={catego}
+            onChangeText={ (text) => setCatego(text)}
           />                
 
-          <SubmitButton>
+          <SubmitButton onPress={handelSubmit}> 
             <SubmitText>Registrar</SubmitText>
-          </SubmitButton>       
+          </SubmitButton>
+
+          {show && (
+            <DatePicker
+            onClose={handleClose}
+            date={dataNasc}
+            onChange={onChange}
+            />
+          )}                 
       </SafeAreaView>
     </Background>
    </TouchableWithoutFeedback>

@@ -24,6 +24,7 @@ function AuthProvider({ children }){
 
     //Logar o usuario
     async function signIn(email, password) {
+        setLoadingAuth(true);
         await firebase.auth().signInWithEmailAndPassword(email, password)
         .then(async (value) =>{
             let uid = value.user.uid;
