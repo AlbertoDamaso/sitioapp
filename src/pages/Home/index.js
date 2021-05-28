@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Alert } from 'react-native';
 import { Background, Container, Nome,ContainerTitle, Title, List} from './styles';
-import { format } from 'date-fns';
 import firebase from '../../services/firebaseConnection';
 import { AuthContext } from '../../contexts/auth';
 import Header from '../../components/Header';
@@ -9,7 +8,7 @@ import BovinoList from '../../components/BovinoList';
 
 export default function Home() {
   const [bovino, setBovino] = useState([]);
-  const { user, signOut } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const uid = user && user.uid;
 
   useEffect(()=>{

@@ -18,7 +18,7 @@ export const Input = styled.TextInput.attrs({
 `;
 
 export const InputData = styled.TextInput.attrs({
-        placeholderTextColor: '#222',
+        placeholderTextColor: '#808080',
     })`
     height: 50px;
     width: 80%;

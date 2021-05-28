@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Platform, ActivityIndicator } from 'react-native';
+import { Platform, ActivityIndicator, Keyboard } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../../contexts/auth';
 import { Background, Container, Logo, AreaInput, Input,
@@ -30,6 +30,8 @@ export default function SignIn() {
           placeholder="Email"
           autoCorrect={false}
           autoCapitalize="none"
+          returnKeyTupe="next"
+          onSubmitEditing={ () => Keyboard.dismiss() }
           value={email}
           onChangeText={ (text) => setEmail(text) }          
         />
@@ -40,6 +42,8 @@ export default function SignIn() {
           placeholder="Senha"
           autoCorrect={false}
           autoCapitalize="none"
+          returnKeyTupe="next"
+          onSubmitEditing={ () => Keyboard.dismiss() }
           value={password}
           onChangeText={ (text) => setPassword(text) }
           secureTextEntry={true}          

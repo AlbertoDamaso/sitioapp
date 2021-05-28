@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView, Keyboard, TouchableWithoutFeedback, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView, Keyboard, TouchableWithoutFeedback, TouchableOpacity, Alert,Text } from 'react-native';
 import { Background, Input, SubmitButton, SubmitText, InputData, Area } from './styles';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { format } from 'date-fns';
@@ -25,6 +25,22 @@ export default function New() {
   const [catego, setCatego] = useState('');
   
   const [show, setShow] = useState(false);
+
+  function newCatego(){
+        //Pegando data do item:
+        const formatDiaEscolhido = format((dataNasc), 'dd/MM/yyyy')
+        const [diaItem, mesItem, anoItem] = formatDiaEscolhido.split('/');
+        const dateItem = new Date(`${anoItem}/${mesItem}/${diaItem}`);
+    
+        //Pegando data hoje:
+        const formatDiaHoje = format(new Date(), 'dd/MM/yyyy');
+        const [diaHoje, mesHoje, anoHoje] = formatDiaHoje.split('/');
+        const dateHoje = new Date(`${anoHoje}/${mesHoje}/${diaHoje}`);
+
+        const diff = Math.abs(dateItem - dateHoje);
+        const dias = Math.ceil(diff/ (1000 * 60 * 60 * 24));
+        console.log(dias)
+  }
 
   function handleShowPicker(){
     setShow(true);
@@ -107,7 +123,9 @@ export default function New() {
               returnKeyTupe="next"
               onSubmitEditing={ () => Keyboard.dismiss() } 
               keyboardType="numeric"
-            />   
+              editable={false}
+              
+            />  
             <TouchableOpacity onPress={handleShowPicker}>
               <Icon name="event" color="#000" size={45} 
                 style={{

@@ -1,9 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { Platform, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { AuthContext } from '../../contexts/auth';
+import { Platform, ActivityIndicator, Keyboard } from 'react-native';
 import { Background, Container, AreaInput, Input,
-   SubmitButton, SubmitText, Logo } from '../SignIn/styles';
+    SubmitButton, SubmitText, Logo } from '../SignIn/styles';
+import { TextInputMask } from 'react-native-masked-text';   
+import { AuthContext } from '../../contexts/auth';
+
 
 export default function SignIn() {
   const navigation = useNavigation();
@@ -31,27 +33,38 @@ export default function SignIn() {
                     placeholder="Nome"
                     autoCorrect={false}
                     autoCapitalize="none"
+                    returnKeyTupe="next"
+                    onSubmitEditing={ () => Keyboard.dismiss() }
                     value={nome}
                     onChangeText={ (text) => setNome(text)}
                 />
             </AreaInput>
 
             <AreaInput>
-                <Input
+                <TextInputMask
                     placeholder="Whatsapp"
                     autoCorrect={false}
                     autoCapitalize="none"
-                    keyboardType="phone-pad"
+                    keyboardType="numeric"
+                    type={'cel-phone'}
+                    options={{
+                      maskType: 'BRL',
+                      withDDD: true,
+                      dddMask: '(62) '
+                    }}
+                    returnKeyTupe="next"
+                    onSubmitEditing={ () => Keyboard.dismiss() }
                     value={zap}
-                    onChangeText={ (text) => setZap(text)}                    
+                    onChangeText={ (text) => setZap(text)}  
+                    style={{
+                        backgroundColor: 'rgba(0,0,0,0.20)',
+                        width: '70%',
+                        fontSize: 17,
+                        color: '#000',
+                        marginBottom: 15,
+                        padding: 10
+                    }}                  
                 />
-{/* <TextInputMask
-  onChangeText={(formatted, extracted) => {
-    console.log(formatted) // +1 (123) 456-78-90
-    console.log(extracted) // 1234567890
-  }}
-  mask={"+1 ([000]) [000] [00] [00]"}
-/>                 */}
             </AreaInput>
 
             <AreaInput>
@@ -59,6 +72,8 @@ export default function SignIn() {
                     placeholder="Email"
                     autoCorrect={false}
                     autoCapitalize="none"
+                    returnKeyTupe="next"
+                    onSubmitEditing={ () => Keyboard.dismiss() }
                     value={email}
                     onChangeText={ (text) => setEmail(text)}
                 />
@@ -69,6 +84,7 @@ export default function SignIn() {
                     placeholder="Senha"
                     autoCorrect={false}
                     autoCapitalize="none"
+                    onSubmitEditing={ () => Keyboard.dismiss() }
                     secureTextEntry={true}
                     value={password}
                     onChangeText={ (text) => setPassword(text)}
