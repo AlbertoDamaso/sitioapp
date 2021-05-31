@@ -17,16 +17,6 @@ export const Input = styled.TextInput.attrs({
     font-size: 17px;
 `;
 
-export const InputData = styled.TextInput.attrs({
-        placeholderTextColor: '#808080',
-    })`
-    height: 50px;
-    width: 80%;
-    background-color: rgba(0,0,0,0.20);
-    margin-top: 11px;
-    padding-left: 19px;
-    font-size: 17px;
-`;
 
 export const Area = styled.View`
     width: 90%;

@@ -1,14 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView, Keyboard, TouchableWithoutFeedback, TouchableOpacity, Alert,Text } from 'react-native';
-import { Background, Input, SubmitButton, SubmitText, InputData, Area } from './styles';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { SafeAreaView, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
+import { Background, Input, SubmitButton, SubmitText, Area } from './styles';
 import { format } from 'date-fns';
+import DatePicker from 'react-native-datepicker';
 import firebase from '../../services/firebaseConnection';
 import { AuthContext } from '../../contexts/auth';
 import Header from '../../components/Header';
 import Picker from '../../components/Picker';
-import DatePicker from '../../components/DatePicker';
 
 
 export default function New() {
@@ -23,39 +22,8 @@ export default function New() {
   const [raca, setRaca] = useState('');
   const [desc, setDesc] = useState('');
   const [catego, setCatego] = useState('');
+
   
-  const [show, setShow] = useState(false);
-
-  function newCatego(){
-        //Pegando data do item:
-        const formatDiaEscolhido = format((dataNasc), 'dd/MM/yyyy')
-        const [diaItem, mesItem, anoItem] = formatDiaEscolhido.split('/');
-        const dateItem = new Date(`${anoItem}/${mesItem}/${diaItem}`);
-    
-        //Pegando data hoje:
-        const formatDiaHoje = format(new Date(), 'dd/MM/yyyy');
-        const [diaHoje, mesHoje, anoHoje] = formatDiaHoje.split('/');
-        const dateHoje = new Date(`${anoHoje}/${mesHoje}/${diaHoje}`);
-
-        const diff = Math.abs(dateItem - dateHoje);
-        const dias = Math.ceil(diff/ (1000 * 60 * 60 * 24));
-        console.log(dias)
-  }
-
-  function handleShowPicker(){
-    setShow(true);
-  }
-
-  function handleClose(){
-    setShow(false);
-  }
-
-  const onChange = (date) => {
-    setShow(Platform.OS === 'ios');
-    setDataNasc(date);
-    console.log(date);
-  } 
-
   function handelSubmit(){
     Keyboard.dismiss();
     if(brinco === '' || dataNasc === '' || sexo === '' || dono === ''){
@@ -83,13 +51,13 @@ export default function New() {
     let key = await firebase.database().ref('bovinos').child(uid).push().key;
     await firebase.database().ref('bovinos').child(uid).child(key).set({
       brinco: brinco,
-      dataNasc: format((dataNasc), 'dd/MM/yyyy'),
+      dataNasc: dataNasc,
       sexo: sexo,
       dono: dono,
       peso: parseFloat(peso),
       raca: raca,
       desc: desc,
-      catego: catego
+      catego: catego,
     })
     Keyboard.dismiss();
     setBrinco('');
@@ -118,26 +86,43 @@ export default function New() {
           />
 
           <Area>
-            <InputData
-              placeholder="Data de Nascimento"
-              returnKeyTupe="next"
-              onSubmitEditing={ () => Keyboard.dismiss() } 
-              keyboardType="numeric"
-              editable={false}
-              
-            />  
-            <TouchableOpacity onPress={handleShowPicker}>
-              <Icon name="event" color="#000" size={45} 
-                style={{
-                  backgroundColor:'rgba(0,0,0,0.20)',
-                  width: 60,
-                  height: 50,
+            <DatePicker
+              style={{
+                height: 50,
+                width: '100%',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                top: 11,
+                marginBottom: 11,
+                paddingLeft: 19,                
+                backgroundColor: 'rgba(0,0,0,0.20)',
+              }}
+              date={dataNasc}
+              display="default"
+              mode="date"
+              placeholder="Selecione a data de nascimento"
+              format="DD/MM/YYYY"
+              minDate="01-05-2016"
+              maxDate="01-05-2050"
+              confirmBtnText="Confirm"
+              cancelBtnText="Cancel"
+              customStyles={{
+                dateIcon: {
+                  top: 4,
+                  marginLeft: 0
+                },
+                dateInput: {
+                  alignItems: 'flex-start',
                   marginTop: 11,
-                  paddingTop: 3,
-                  paddingLeft: 8                
-                  }} 
-                />
-            </TouchableOpacity>  
+                  borderWidth: 0,
+                },
+                placeholderText: {
+                  color: '#222',
+                  fontSize: 17,
+                }
+              }} 
+              onDateChange={(date) => setDataNasc(date)}    
+            />    
           </Area>
 
           <Picker onChange={setSexo}/>  
@@ -173,27 +158,20 @@ export default function New() {
             onSubmitEditing={ () => Keyboard.dismiss() }
             value={desc}
             onChangeText={ (text) => setDesc(text)}
-          />
+          />            
 
           <Input
             placeholder="Categoria"
             returnKeyTupe="next"
             onSubmitEditing={ () => Keyboard.dismiss() }
             value={catego}
-            onChangeText={ (text) => setCatego(text)}
-          />                
+            onChangeText={ (text) => setDesc(text)}
+          />  
 
           <SubmitButton onPress={handelSubmit}> 
             <SubmitText>Registrar</SubmitText>
           </SubmitButton>
-
-          {show && (
-            <DatePicker
-            onClose={handleClose}
-            date={dataNasc}
-            onChange={onChange}
-            />
-          )}                 
+                       
       </SafeAreaView>
     </Background>
    </TouchableWithoutFeedback>

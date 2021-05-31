@@ -12,25 +12,56 @@ export default function Home() {
   const uid = user && user.uid;
 
   useEffect(()=>{
-    async function loadList(){
-      await firebase.database().ref('bovinos')
-      .child(uid).orderByChild('date')
-      .on('value', (snapshot)=>{
-        setBovino([]);
-
-        snapshot.forEach((childItem) =>{
-          let list = {
-            key: childItem.key,
-            brinco: childItem.val().brinco,
-            catego: childItem.val().catego
-          };
-
-          setBovino(oldArray => [...oldArray, list].reverse());
+      async function loadList(){
+        await firebase.database().ref('bovinos')
+        .child(uid).orderByChild('date')
+        .on('value', (snapshot)=>{
+          setBovino([]);
+  
+          snapshot.forEach((childItem) =>{
+            let list = {
+              key: childItem.key,
+              brinco: childItem.val().brinco,
+              catego: childItem.val().catego,
+            };
+  
+            setBovino(oldArray => [...oldArray, list].reverse());
+          })
         })
-      })
-    }
-    loadList();
+      }
+      loadList();
   }, []);
+
+  // function newCatego(){
+  //   //Pegando data do item:
+  //   const [diaItem, mesItem, anoItem] = data.dataNasc.split('/');
+  //   const dateItem = new Date(`${anoItem}/${mesItem}/${diaItem}`);
+
+  //   //Pegando data hoje:
+  //   const formatDiaHoje = format(new Date(), 'dd-MM-yyyy');
+  //   const [diaHoje, mesHoje, anoHoje] = formatDiaHoje.split('/');
+  //   const dateHoje = new Date(`${anoHoje}/${mesHoje}/${diaHoje}`);
+
+  //   const diff = Math.abs(dateItem - dateHoje);
+  //   const dias = Math.ceil(diff/ (1000 * 60 * 60 * 24));
+
+  //   if(dias < 730 && sexo === 'macho'){
+  //     catego = 'Novilho'  
+  //     return;  
+  //   }
+  //   if(dias < 730 && sexo === 'femea'){
+  //     catego = 'Novilha'
+  //     return;
+  //   }
+  //   if(dias >= 730 && sexo === 'macho'){
+  //     catego = 'Boi'
+  //     return;
+  //   }
+  //   if(dias >= 730 && sexo === 'femea'){
+  //     catego = 'Vaca'
+  //     return;
+  //   }
+  //}
 
   function handleDelete(data){
     Alert.alert(
@@ -54,6 +85,8 @@ export default function Home() {
       .child(uid).child(data.key).remove()
   }
 
+
+
  return (
    <Background>
     <Header/>
@@ -68,7 +101,7 @@ export default function Home() {
       showVerticalScrollIndicator={false}
       data={bovino}
       keyExtractor={ item => item.key}
-      renderItem={ ({ item }) => ( <BovinoList data={item} deleteItem={handleDelete}/> )}
+      renderItem={ ({ item }) => ( <BovinoList newCatego data={item} deleteItem={handleDelete}/> )}
     />
 
    </Background>
