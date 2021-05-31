@@ -165,7 +165,7 @@ export default function New() {
             returnKeyTupe="next"
             onSubmitEditing={ () => Keyboard.dismiss() }
             value={catego}
-            onChangeText={ (text) => setDesc(text)}
+            onChangeText={ (text) => setCatego(text)}
           />  
 
           <SubmitButton onPress={handelSubmit}> 
