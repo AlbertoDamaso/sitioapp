@@ -1,8 +1,8 @@
 import styled from 'styled-components/native';
 
 export const Background = styled.View`
- flex:1;
- background-color: #F0F0F5;
+    flex:1;
+    background-color: #F0F0F5;
 `;
 
 export const Container = styled.View`
