@@ -7,7 +7,7 @@ import { TextInputMask } from 'react-native-masked-text';
 import { AuthContext } from '../../contexts/auth';
 
 
-export default function SignIn() {
+export default function SignUp() {
   const navigation = useNavigation();
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
