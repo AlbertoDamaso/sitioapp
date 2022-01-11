@@ -17,7 +17,7 @@ export const Nome = styled.Text`
 `;
 
 export const ContainerTitle = styled.View`
-    width: 100%;
+    width: 80%;
     justify-content: space-between;  
     align-self: center;
     flex-direction: row;

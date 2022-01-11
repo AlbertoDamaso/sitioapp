@@ -23,6 +23,6 @@ export const BrincoText = styled.Text`
 `;
 
 export const CategoText = styled.Text`
-    width: 70px;
+    width: 80px;
     font-size: 20;
 `;
